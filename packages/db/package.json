@@ -1,0 +1,31 @@
+{
+  "name": "@repo/db",
+  "version": "1.0.0",
+  "files": [
+    "dist/**"
+  ],
+  "prisma": {
+    "schema": "./prisma"
+  },
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "build": "prisma generate",
+    "create-migration-only": "prisma migrate dev --create-only",
+    "seed": "ts-node ./src/seed.ts"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1",
+    "nanoid": "^4",
+    "prisma": "^6"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "^6"
+  }
+}

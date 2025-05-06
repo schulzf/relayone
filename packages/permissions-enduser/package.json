@@ -1,0 +1,31 @@
+{
+  "name": "@repo/permissions-enduser",
+  "type": "module",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/mjs/index.mjs",
+  "types": "dist/cjs/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/cjs/types/index.d.ts",
+      "require": "./dist/cjs/index.cjs",
+      "import": "./dist/esm/index.mjs",
+      "default": "./dist/esm/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^26.0.1",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rollup": "^4.21.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}

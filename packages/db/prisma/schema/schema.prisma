@@ -1,0 +1,11 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../../dist"
+  binaryTargets   = ["native", "linux-musl-openssl-3.0.x"]
+  previewFeatures = []
+}

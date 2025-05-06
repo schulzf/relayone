@@ -1,0 +1,25 @@
+model Address {
+  id             String      @id @default(cuid())
+  companyId      String?     @unique
+  businessUnitId String?     @unique
+  customerId     String?     @unique
+  type           AddressType @default(COMPANY)
+  street         String?
+  number         String?
+  complement     String?
+  city           String?
+  district       String?
+  region         String?
+  state          String?
+  country        String?
+  zip            String?
+  locked         Boolean     @default(false)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  company Company? @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([businessUnitId])
+  @@index([customerId])
+}

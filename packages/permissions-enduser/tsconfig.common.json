@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "sourceMap": true // Enable source map generation
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

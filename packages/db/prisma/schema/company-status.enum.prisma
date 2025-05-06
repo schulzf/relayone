@@ -1,0 +1,8 @@
+enum CompanyStatus {
+    INCOMPLETE
+    PENDING
+    PROVISIONING
+    APPROVED
+    REJECTED
+    SUSPENDED
+}

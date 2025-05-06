@@ -1,0 +1,9 @@
+.turbo
+i18n_pull.sh
+migrate-procedures-prod.sh
+reset.sh
+migrate.sh
+.idea
+node_modules/
+dist/
+.env
