@@ -1,20 +1,20 @@
-import {Injectable} from '@nestjs/common';
-import {ConfigService} from '@nestjs/config';
-import {endUserPermissions} from '@repo/permissions-enduser';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { endUserPermissions } from '@repo/permissions-enduser';
 import SuperJSON from '@repo/superjson';
-import {initTRPC, TRPCError} from '@trpc/server';
-import {JwtPayload, verify} from 'jsonwebtoken';
-import {LoggingService} from 'src/Core/Logging';
-import {z} from 'zod';
-import {Prisma} from '../../Datasource/Prisma/Prisma';
-import {Redis} from '../../Datasource/Redis/Redis';
-import {TrpcCtx} from './TrpcContext';
+import { initTRPC, TRPCError } from '@trpc/server';
+import { JwtPayload, verify } from 'jsonwebtoken';
+import { LoggingService } from 'src/Core/Logging';
+import { z } from 'zod';
+import { PrismaService } from '../../Datasource/Prisma/Prisma';
+import { Redis } from '../../Datasource/Redis/Redis';
+import { TrpcCtx } from './TrpcContext';
 
 @Injectable()
 export class TrpcService {
   constructor(
     private readonly config: ConfigService,
-    private readonly prisma: Prisma,
+    private readonly prisma: PrismaService,
     private readonly redis: Redis,
     private readonly log: LoggingService,
   ) {}

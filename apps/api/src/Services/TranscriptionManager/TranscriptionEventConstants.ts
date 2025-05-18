@@ -1,0 +1,10 @@
+export const TRANSCRIPTION_EVENT = {
+  OPEN: 'transcription.open',
+  CLOSE: 'transcription.close',
+  TRANSCRIPT: 'transcription.transcript',
+  ERROR: 'transcription.error',
+  SPEECH_STARTED: 'transcription.speech_started',
+  UTTERANCE_ENDED: 'transcription.utterance_ended',
+} as const;
+
+export type TranscriptionEvent = (typeof TRANSCRIPTION_EVENT)[keyof typeof TRANSCRIPTION_EVENT];

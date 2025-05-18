@@ -1,19 +1,19 @@
-import {trpcBundleBootstrap} from "./Bundle/Trpc/TrpcBundleBootstrap";
-import {startupHacks} from "./hacks";
+import { inboundApiBundleBootstrap } from './Bundle/InboundApi/InboundApiBundleBootstrap';
+import { trpcBundleBootstrap } from './Bundle/Trpc/TrpcBundleBootstrap';
+import { startupHacks } from './hacks';
 
 startupHacks();
 
 switch (process.env.BUNDLE) {
-  case "TRPC":
+  case 'TRPC':
     void trpcBundleBootstrap();
     break;
-  case "LOCAL_UI":
-    void trpcBundleBootstrap();
+  case 'INBOUND_API':
+    void inboundApiBundleBootstrap();
     break;
 
-  case "ALL":
-    void Promise.all([trpcBundleBootstrap()]);
-
+  case 'ALL':
+    void Promise.all([trpcBundleBootstrap(), inboundApiBundleBootstrap()]);
     break;
 
   default:

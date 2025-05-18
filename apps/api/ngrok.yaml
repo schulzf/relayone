@@ -1,0 +1,11 @@
+version: 2
+authtoken: 2nBquRce9jAitoZyonvk8FKSDIj_2b6e4X6emdubPqymUQHhB
+tunnels:
+  main:
+    proto: http
+    hostname: 'relayone.ngrok.app'
+    addr: http://localhost:5050
+  websocket:
+    proto: http
+    hostname: 'relayonews.ngrok.app'
+    addr: http://localhost:5033
