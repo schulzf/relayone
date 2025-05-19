@@ -20,23 +20,21 @@ export class Transcript {
       throw new Error('Session not found');
     }
 
-    this.sessionService.addToCurrentTranscript(payload.streamSid, payload.payload.channel.alternatives[0]?.transcript);
+    this.sessionService.addToCurrentTranscript(payload.streamSid, payload.payload);
 
-    if (payload.payload.speech_final) {
-      const transcript = this.sessionService.getCurrentTranscript(payload.streamSid);
+    const transcript = this.sessionService.getCurrentTranscript(payload.streamSid);
 
-      console.log('user says: ', transcript);
-      this.eventEmitter.emit(TRANSCRIPTION_EVENT.SPEECH_ENDED, {
-        streamSid: payload.streamSid,
-        transcript,
-      } satisfies TranscriptionEventSpeechEnded);
+    console.log('user says: ', transcript);
+    this.eventEmitter.emit(TRANSCRIPTION_EVENT.SPEECH_ENDED, {
+      streamSid: payload.streamSid,
+      transcript,
+    } satisfies TranscriptionEventSpeechEnded);
 
-      this.sessionService.clearCurrentTranscript(payload.streamSid);
+    this.sessionService.clearCurrentTranscript(payload.streamSid);
 
-      // TODO: save transcript to db
-      // TODO: send transcript to LLM
-      // TODO: save LLM response to db
-      // TODO: send LLM response to user
-    }
+    // TODO: save transcript to db
+    // TODO: send transcript to LLM
+    // TODO: save LLM response to db
+    // TODO: send LLM response to user
   }
 }

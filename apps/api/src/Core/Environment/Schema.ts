@@ -18,6 +18,8 @@ export const schema = z.object({
   DEEPGRAM_API_KEY: z.string(),
   OPENAI_API_KEY: z.string(),
   ELEVENLABS_API_KEY: z.string(),
+  GLADIA_API_KEY: z.string(),
+  GLADIA_API_URL: z.string().url(),
 });
 
 export type EnvVariables = z.infer<typeof schema>;

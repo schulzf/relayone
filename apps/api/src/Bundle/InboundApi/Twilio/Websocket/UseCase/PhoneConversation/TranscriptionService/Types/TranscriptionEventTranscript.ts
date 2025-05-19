@@ -50,6 +50,6 @@ export type Payload = z.infer<typeof PayloadSchema>;
 
 export const TranscriptionEventTranscriptSchema = z.object({
   streamSid: z.string(),
-  payload: PayloadSchema,
+  payload: z.string(),
 });
 export type TranscriptionEventTranscript = z.infer<typeof TranscriptionEventTranscriptSchema>;

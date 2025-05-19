@@ -13,7 +13,10 @@ export class IncomingCallUseCase implements UseCase<Promise<void>, [dto: TwiMLIn
     try {
       const call = new VoiceResponse();
       const connection = call.connect();
-      connection.stream({ url: process.env.INBOUND_WEBSOCKET_STREAM_URL });
+      connection.stream({
+        url: process.env.INBOUND_WEBSOCKET_STREAM_URL,
+      });
+
       const twiML = call.toString();
 
       return res.status(200).type('text/xml').send(twiML);

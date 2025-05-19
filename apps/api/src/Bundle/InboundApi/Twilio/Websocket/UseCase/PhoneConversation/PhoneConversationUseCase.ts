@@ -55,7 +55,7 @@ export class PhoneConversationUseCase implements UseCase<Promise<void>, [WebSock
             return;
           }
 
-          this.transcriptionManager.sendMediaForTranscription(session.deepgramClient, media.media.payload);
+          this.transcriptionManager.sendMediaForTranscription(session.gladiaClient, media.media.payload);
           break;
         case TwiMLEventName.mark:
           const mark = e as TwiMLMark;
@@ -67,6 +67,7 @@ export class PhoneConversationUseCase implements UseCase<Promise<void>, [WebSock
           break;
         case TwiMLEventName.stop:
           this.eventEmitter.emit(CALL_EVENT.PHONE_CALL_ENDED, { streamSid: e.event });
+          this.sessionService.deleteSession(e.streamSid);
           break;
         default:
           break;

@@ -1,9 +1,7 @@
-import { ListenLiveClient } from '@deepgram/sdk';
 import { Injectable } from '@nestjs/common';
 import { CoreMessage } from 'ai';
 import { ElevenLabsClient } from 'elevenlabs';
 import * as WebSocket from 'ws';
-import { CreateElevenLabsConnection } from '../TextToSpeechService/CreateElevenLabsConnection';
 import { TranscriptionService } from '../TranscriptionService/TranscriptionService';
 
 type StreamSid = string;
@@ -13,7 +11,7 @@ export interface Session {
   callSid: CallSid;
   streamSid: StreamSid;
   twilioConn: WebSocket;
-  deepgramClient: ListenLiveClient;
+  gladiaClient: WebSocket;
   elevenLabsClient: ElevenLabsClient;
   messages: CoreMessage[];
   interactionCount: number;
@@ -26,22 +24,19 @@ export interface Session {
 
 @Injectable()
 export class SessionService {
-  constructor(
-    private readonly transcriptionManager: TranscriptionService,
-    private readonly createElevenLabsConnection: CreateElevenLabsConnection,
-  ) {}
+  constructor(private readonly transcriptionManager: TranscriptionService) {}
 
   private sessions: Map<StreamSid, Session> = new Map();
 
   async createSession({ callSid, streamSid, twilioConn }: { callSid: CallSid; streamSid: StreamSid; twilioConn: WebSocket }) {
-    const deepgramClient = this.transcriptionManager.createTranscriptionClient(streamSid);
+    const gladiaClient = await this.transcriptionManager.createTranscriptionClient(streamSid);
     const elevenlabs = new ElevenLabsClient();
 
     const session = {
       callSid,
       streamSid,
       twilioConn,
-      deepgramClient,
+      gladiaClient,
       elevenLabsClient: elevenlabs,
       messages: [
         {
@@ -106,6 +101,10 @@ Classification des types de peau selon l'échelle de Fitzpatrick :
 - Type V (Dark Brown) : Peau brune foncée, rarement sujette aux coups de soleil, bronze facilement.
 - Type VI (Black) : Peau noire, ne prend jamais de coups de soleil, toujours brune.
 
+IMPORTANT:
+Gardez a l'esprit que vous parlez au telephone avec un client, vos reponses doivent etre courtes et directes de façon a ce que le client puisse parler et vous ecouter.
+En aucun cas vous devez reciter des informations dures.
+Tout ce que vous ecrivez va etre dit verbalement, donc ecrivez de façon compatible.
             Vous devez ajouter un symbole '•' a chaques fois qu'une  pause naturelle est necessaire et où votre réponse peut être divisée pour la synthèse vocale.`,
         },
         {
@@ -131,15 +130,14 @@ Classification des types de peau selon l'échelle de Fitzpatrick :
   }
 
   deleteSession(streamSid: StreamSid) {
-    this.sessions.delete(streamSid);
-  }
-
-  setDeepgramClient(streamSid: StreamSid, deepgramClient: ListenLiveClient) {
     const session = this.getSession(streamSid);
     if (!session) {
       throw new Error('Session not found');
     }
-    session.deepgramClient = deepgramClient;
+    session.gladiaClient.close();
+    session.twilioConn.close();
+
+    this.sessions.delete(streamSid);
   }
 
   getCurrentTranscript(streamSid: StreamSid) {
