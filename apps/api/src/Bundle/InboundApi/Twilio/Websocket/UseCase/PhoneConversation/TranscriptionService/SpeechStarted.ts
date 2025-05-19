@@ -7,6 +7,6 @@ import { TranscriptionEventSpeechStarted } from 'src/Bundle/InboundApi/Twilio/We
 export class SpeechStarted {
   @OnEvent(TRANSCRIPTION_EVENT.SPEECH_STARTED)
   speechStarted(payload: TranscriptionEventSpeechStarted) {
-    console.log(TRANSCRIPTION_EVENT.SPEECH_STARTED, payload.streamSid);
+    // console.log(TRANSCRIPTION_EVENT.SPEECH_STARTED, payload.streamSid);
   }
 }

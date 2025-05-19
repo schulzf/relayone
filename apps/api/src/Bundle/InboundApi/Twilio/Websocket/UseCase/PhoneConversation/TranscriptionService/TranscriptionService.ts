@@ -26,7 +26,7 @@ export class TranscriptionService {
       interim_results: true, // Get partial results
       smart_format: true,
       vad_events: true,
-      endpointing: 250, // Detect speech endings
+      endpointing: 200, // Detect speech endings
       utterance_end_ms: 1000, // Wait time for utterance end
       language: 'multi',
     });
@@ -40,12 +40,12 @@ export class TranscriptionService {
     });
 
     deepgramClient.on(LiveTranscriptionEvents.Transcript, (payload: TranscriptionEventTranscript['payload']) => {
-      console.log(payload.channel.alternatives[0]?.transcript, 'is final: ', payload.is_final, payload.speech_final);
-
       // ignore silence
       if (payload.channel.alternatives[0]?.transcript === '') {
         return;
       }
+
+      // console.log(payload.channel.alternatives[0]?.transcript, 'is final: ', payload.is_final, 'speech_final: ', payload.speech_final);
 
       // Only process final transcripts
       if (payload.is_final) {
