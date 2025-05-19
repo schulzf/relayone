@@ -2,22 +2,23 @@ import { ListenLiveClient } from '@deepgram/sdk';
 import { Injectable } from '@nestjs/common';
 import { CoreMessage } from 'ai';
 import * as WebSocket from 'ws';
-import { TranscriptionManager } from '../TranscriptionManager/TranscriptionManager';
+import { TranscriptionService } from '../TranscriptionService/TranscriptionService';
 
 type StreamSid = string;
 type CallSid = string;
 
-interface Session {
+export interface Session {
   callSid: CallSid;
   streamSid: StreamSid;
   twilioConn: WebSocket;
   deepgramClient: ListenLiveClient;
   messages: CoreMessage[];
+  currentTranscript: string;
 }
 
 @Injectable()
-export class SessionManager {
-  constructor(private readonly transcriptionManager: TranscriptionManager) {}
+export class SessionService {
+  constructor(private readonly transcriptionManager: TranscriptionService) {}
 
   private sessions: Map<StreamSid, Session> = new Map();
 
@@ -29,6 +30,7 @@ export class SessionManager {
       twilioConn,
       deepgramClient,
       messages: [],
+      currentTranscript: '',
     } satisfies Session;
 
     this.sessions.set(streamSid, session);
@@ -50,7 +52,30 @@ export class SessionManager {
       throw new Error('Session not found');
     }
     session.deepgramClient = deepgramClient;
+  }
 
-    this.sessions.set(streamSid, session);
+  getCurrentTranscript(streamSid: StreamSid) {
+    const session = this.getSession(streamSid);
+    if (!session) {
+      throw new Error('Session not found');
+    }
+
+    return session.currentTranscript;
+  }
+
+  addToCurrentTranscript(streamSid: StreamSid, transcript: string) {
+    const session = this.getSession(streamSid);
+    if (!session) {
+      throw new Error('Session not found');
+    }
+    session.currentTranscript = session.currentTranscript + ' ' + transcript;
+  }
+
+  clearCurrentTranscript(streamSid: StreamSid) {
+    const session = this.getSession(streamSid);
+    if (!session) {
+      throw new Error('Session not found');
+    }
+    session.currentTranscript = '';
   }
 }

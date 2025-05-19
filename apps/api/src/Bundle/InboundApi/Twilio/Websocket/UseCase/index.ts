@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PhoneConversationUseCase } from './PhoneConversationUseCase';
+import { PhoneConversationUseCase } from './PhoneConversation/PhoneConversationUseCase';
 
 @Injectable()
 export class WebsocketUseCaseContainer {

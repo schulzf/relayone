@@ -5,9 +5,6 @@ import { Buffer } from 'node:buffer';
 
 @Injectable()
 export class TextToSpeechService extends EventEmitter {
-  //   private nextExpectedIndex = 0; // Track order of speech chunks
-  //   private speechBuffer = {}; // Store speech pieces
-
   constructor() {
     super();
   }

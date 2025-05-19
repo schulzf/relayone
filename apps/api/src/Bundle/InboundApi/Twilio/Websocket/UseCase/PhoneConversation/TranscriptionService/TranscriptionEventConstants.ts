@@ -1,6 +1,7 @@
 export const TRANSCRIPTION_EVENT = {
   OPEN: 'transcription.open',
   CLOSE: 'transcription.close',
+  IS_TALKING: 'transcription.is_talking',
   TRANSCRIPT: 'transcription.transcript',
   ERROR: 'transcription.error',
   SPEECH_STARTED: 'transcription.speech_started',

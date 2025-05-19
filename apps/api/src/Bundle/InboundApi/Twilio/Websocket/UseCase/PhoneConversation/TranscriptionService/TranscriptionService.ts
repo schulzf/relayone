@@ -1,4 +1,4 @@
-import { createClient, LiveTranscriptionEvents } from '@deepgram/sdk';
+import { createClient, ListenLiveClient, LiveTranscriptionEvents } from '@deepgram/sdk';
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TRANSCRIPTION_EVENT } from './TranscriptionEventConstants';
@@ -10,7 +10,7 @@ import { TranscriptionEventSpeechStarted } from './Types/TranscritpionEventSpeec
 import { TranscriptionEventUtteranceEnded } from './Types/TranscritpionEventUtteranceEnded';
 
 @Injectable()
-export class TranscriptionManager {
+export class TranscriptionService {
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
   createTranscriptionClient(streamSid: string) {
@@ -26,7 +26,7 @@ export class TranscriptionManager {
       interim_results: true, // Get partial results
       smart_format: true,
       vad_events: true,
-      endpointing: 230, // Detect speech endings
+      endpointing: 200, // Detect speech endings
       utterance_end_ms: 1000, // Wait time for utterance end
       language: 'multi',
     });
@@ -39,8 +39,18 @@ export class TranscriptionManager {
       this.eventEmitter.emit(TRANSCRIPTION_EVENT.CLOSE, { streamSid, payload } satisfies TranscriptionEventClose);
     });
 
-    deepgramClient.on(LiveTranscriptionEvents.Transcript, (payload) => {
-      this.eventEmitter.emit(TRANSCRIPTION_EVENT.TRANSCRIPT, { streamSid, payload } satisfies TranscriptionEventTranscript);
+    deepgramClient.on(LiveTranscriptionEvents.Transcript, (payload: TranscriptionEventTranscript['payload']) => {
+      // ignore silence
+      if (payload.channel.alternatives[0]?.transcript === '') {
+        return;
+      }
+
+      // Only process final transcripts
+      if (payload.is_final) {
+        this.eventEmitter.emit(TRANSCRIPTION_EVENT.TRANSCRIPT, { streamSid, payload } satisfies TranscriptionEventTranscript);
+      } else {
+        this.eventEmitter.emit(TRANSCRIPTION_EVENT.IS_TALKING);
+      }
     });
 
     deepgramClient.on(LiveTranscriptionEvents.Error, (payload) => {
@@ -52,7 +62,6 @@ export class TranscriptionManager {
     });
 
     deepgramClient.on(LiveTranscriptionEvents.UtteranceEnd, (payload) => {
-      console.log('ut_end');
       this.eventEmitter.emit(TRANSCRIPTION_EVENT.UTTERANCE_ENDED, { streamSid, payload } satisfies TranscriptionEventUtteranceEnded);
     });
 
@@ -61,5 +70,9 @@ export class TranscriptionManager {
     });
 
     return deepgramClient;
+  }
+
+  sendMediaForTranscription(client: ListenLiveClient, base64audio: string) {
+    client.send(Buffer.from(base64audio, 'base64'));
   }
 }
