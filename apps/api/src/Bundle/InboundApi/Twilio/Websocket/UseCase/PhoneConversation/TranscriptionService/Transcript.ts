@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { TRANSCRIPTION_EVENT } from 'src/Bundle/InboundApi/Twilio/Websocket/UseCase/PhoneConversation/TranscriptionService/TranscriptionEventConstants';
 import { TranscriptionEventTranscript } from 'src/Bundle/InboundApi/Twilio/Websocket/UseCase/PhoneConversation/TranscriptionService/Types/TranscriptionEventTranscript';
 import { SessionService } from '../SessionService/SessionService';
+import { TranscriptionEventSpeechEnded } from './Types/TranscritpionEventSpeechEnded';
 
 @Injectable()
 export class Transcript {
-  constructor(private readonly sessionService: SessionService) {}
+  constructor(
+    private readonly sessionService: SessionService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   @OnEvent(TRANSCRIPTION_EVENT.TRANSCRIPT)
   transcript(payload: TranscriptionEventTranscript) {
@@ -20,7 +24,13 @@ export class Transcript {
 
     if (payload.payload.speech_final) {
       const transcript = this.sessionService.getCurrentTranscript(payload.streamSid);
-      console.log('user is done talking: ', transcript);
+
+      console.log('user says: ', transcript);
+      this.eventEmitter.emit(TRANSCRIPTION_EVENT.SPEECH_ENDED, {
+        streamSid: payload.streamSid,
+        transcript,
+      } satisfies TranscriptionEventSpeechEnded);
+
       this.sessionService.clearCurrentTranscript(payload.streamSid);
 
       // TODO: save transcript to db

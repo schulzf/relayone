@@ -7,6 +7,6 @@ import { TranscriptionEventClose } from 'src/Bundle/InboundApi/Twilio/Websocket/
 export class Close {
   @OnEvent(TRANSCRIPTION_EVENT.OPEN)
   close(payload: TranscriptionEventClose) {
-    console.log(TRANSCRIPTION_EVENT.CLOSE, payload.streamSid);
+    console.log(TRANSCRIPTION_EVENT.CLOSE);
   }
 }

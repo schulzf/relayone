@@ -17,6 +17,7 @@ export const schema = z.object({
   BUNDLE: z.enum(['ALL', 'TRPC', 'INBOUND_API']),
   DEEPGRAM_API_KEY: z.string(),
   OPENAI_API_KEY: z.string(),
+  ELEVENLABS_API_KEY: z.string(),
 });
 
 export type EnvVariables = z.infer<typeof schema>;

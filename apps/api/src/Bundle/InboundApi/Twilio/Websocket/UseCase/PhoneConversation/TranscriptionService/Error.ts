@@ -7,6 +7,6 @@ import { TranscriptionEventError } from 'src/Bundle/InboundApi/Twilio/Websocket/
 export class Error {
   @OnEvent(TRANSCRIPTION_EVENT.ERROR)
   error(payload: TranscriptionEventError) {
-    console.log(TRANSCRIPTION_EVENT.ERROR, payload.streamSid);
+    console.log(TRANSCRIPTION_EVENT.ERROR, payload);
   }
 }

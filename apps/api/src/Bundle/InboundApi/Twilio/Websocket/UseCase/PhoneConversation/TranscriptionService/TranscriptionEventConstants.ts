@@ -5,6 +5,7 @@ export const TRANSCRIPTION_EVENT = {
   TRANSCRIPT: 'transcription.transcript',
   ERROR: 'transcription.error',
   SPEECH_STARTED: 'transcription.speech_started',
+  SPEECH_ENDED: 'transcription.speech_ended',
   UTTERANCE_ENDED: 'transcription.utterance_ended',
 } as const;
 
